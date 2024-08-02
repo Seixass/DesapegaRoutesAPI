@@ -1,38 +1,29 @@
+const validarUsuario = (req, res, next) => {
+    const { nome, email, telefone, senha, confirmsenha } = req.body;
 
-    const validarUsuario = (req, res, next) => {
-    const {nome, email, telefone, senha, confirmsenha} = req.body
-
-    if(!nome){
-        res.status(400).json({msg:"O nome é obrigatório"});
-        return;
+    if (!nome) {
+        return res.status(400).json({ msg: "O nome é obrigatório" });
     }
-    if(!email){
-        res.status(400).json({msg:"O email é obrigatório"});
-        return;
+    if (!email) {
+        return res.status(400).json({ msg: "O email é obrigatório" });
     }
-    if(!telefone){
-        res.status(400).json({msg:"O telefone é obrigatório"});
-        return;
+    if (!telefone) {
+        return res.status(400).json({ msg: "O telefone é obrigatório" });
     }
-    if(!senha){
-        res.status(400).json({msg:"A senha é obrigatório"});
-        return;
+    if (!senha) {
+        return res.status(400).json({ msg: "A senha é obrigatória" });
     }
-    if(!confirmsenha){
-        res.status(400).json({msg:"A confirmação da senha é obrigatório"});
-        return;
+    if (!confirmsenha) {
+        return res.status(400).json({ msg: "A confirmação da senha é obrigatória" });
     }
-    if(!email.includes("@")){
-        res.status(409).json({msg: "deve conter @ do email"});
-        return;
+    if (!email.includes("@")) {
+        return res.status(409).json({ msg: "O e-mail deve conter '@'" });
     }
-    if(senha !== confirmsenha){
-        res.status(409).json({msg: "A senha e confirmação de senha deve ser iguais"});
-        return;
+    if (senha !== confirmsenha) {
+        return res.status(409).json({ msg: "A senha e confirmação da senha devem ser iguais" });
     }
 
-    next() 
-
-}
+    next();
+};
 
 export default validarUsuario;

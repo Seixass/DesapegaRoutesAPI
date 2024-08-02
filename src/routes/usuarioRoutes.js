@@ -1,24 +1,14 @@
 import { Router } from "express";
-
-// Import controllers
-import {
-    register,
-    login,
-    checkUser
-} from "../controllers/usuarioController.js";
-
-// Import middleware
+import { register, login, checkUser, getUserById, editUser } from "../controllers/UsuarioController.js";
+import verifyToken from "../helpers/verifyToken.js";
 import validarUsuario from "../helpers/validar-user.js";
 
 const router = Router();
 
-// Route to register a user
 router.post("/register", validarUsuario, register);
-
-// Route to log in a user
 router.post("/login", login);
-
-// Route to check user details
-router.get("/:id", checkUser);
+router.get("/checkUser", verifyToken, checkUser);
+router.get("/:id", getUserById);
+router.put("/edit/:id", verifyToken, editUser);
 
 export default router;

@@ -1,24 +1,22 @@
-import conn from "../config/conn.js"
+import conn from "../config/conn.js";
 
-const tableUsers = /*sql*/`
-    create table if not exists usuarios(
-        usuario_id varchar(60) primary key,
-        nome varchar(255) not null,
-        email varchar(255) not null,
-        telefone varchar(255) not null,
-        senha varchar(255) not null,
-        imagem varchar(255) not null,
-
-        created_at timestamp default CURRENT_TIMESTAMP,
-        updated_at timestamp default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP
+const tableUsers = `
+    CREATE TABLE IF NOT EXISTS usuarios (
+        usuario_id VARCHAR(60) PRIMARY KEY,
+        nome VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        telefone VARCHAR(255) NOT NULL,
+        senha VARCHAR(255) NOT NULL,
+        imagem VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )
 `;
 
-conn.query(tableUsers, (err)=>{
-    if(err){
-        console.error(err)
-        return
+conn.query(tableUsers, (err) => {
+    if (err) {
+        console.error(err);
+        return;
     }
-    console.log("Tabela de [usuarios] criado com sucesso")
-})
-
+    console.log("Tabela de [usuarios] criada com sucesso");
+});
