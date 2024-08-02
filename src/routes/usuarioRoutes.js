@@ -1,14 +1,24 @@
 import { Router } from "express";
 
-//importar controller de usaurio
-import { register } from "../controllers/usuarioController.js"
+// Import controllers
+import {
+    register,
+    login,
+    checkUser
+} from "../controllers/usuarioController.js";
 
-//importar os helpers
+// Import middleware
 import validarUsuario from "../helpers/validar-user.js";
 
-const router = Router()
+const router = Router();
 
-//localhost:9090//usuarios/register
-router.post("/register", validarUsuario, register)
+// Route to register a user
+router.post("/register", validarUsuario, register);
+
+// Route to log in a user
+router.post("/login", login);
+
+// Route to check user details
+router.get("/:id", checkUser);
 
 export default router;

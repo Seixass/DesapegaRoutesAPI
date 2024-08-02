@@ -1,4 +1,3 @@
-import { response } from "express"
 
     const validarUsuario = (req, res, next) => {
     const {nome, email, telefone, senha, confirmsenha} = req.body
