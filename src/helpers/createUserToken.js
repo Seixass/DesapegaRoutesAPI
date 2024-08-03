@@ -9,7 +9,6 @@ const createUserToken = async (user, res) => {
                 id: user.usuario_id
             },
             secretKey,
-            { expiresIn: '1h' }
         );
 
         res.status(200).json({

@@ -8,9 +8,12 @@ import conn from "./config/conn.js"
 
 //importação dos módulos (tabela) 
 import "./models/usuarioModel.js"
+import "./models/objetoModel.js"
+import "./models/objetoImagesModel.js"
 
 //importação de rotas
 import usuarioRouter from "./routes/usuarioRoutes.js"
+import objetoRouter from "./routes/objetoRoutes.js"
 
 const app = express();
 
@@ -19,6 +22,7 @@ app.use(express.json())
 
 //Utilizar a Rota
 app.use('/usuarios', usuarioRouter)
+app.use('/objetos', objetoRouter)
 
 //404
 app.use((request, response)=>{

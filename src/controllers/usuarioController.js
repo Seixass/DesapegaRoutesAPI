@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import getToken from "../helpers/getToken.js";
 import createUserToken from "../helpers/createUserToken.js";
+import getUserByToken from "../helpers/getUserByToken.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "S4e@F5r&1#qP7k9V!zE2*Jx3WdL8uC^bT@o8gL2yR!mF4^Nx7";
 
@@ -144,65 +145,88 @@ export const getUserById = (req, res) => {
     });
 };
 
-export const editUser = async (req, res) => {
-    const { id } = req.params;
-    const { nome, email, telefone, senha } = req.body;
-
-    const token = getToken(req);
-
-    if (!token) {
-        return res.status(401).json({ message: "Token não fornecido" });
-    }
-
+export const editUser = async (request, response) => {
+    const { id } = request.params;
+  
+    //verificar se o usuário está logado
     try {
-        // Fetch the user from the token
-        const userFromToken = await getUserByToken(token);
-
-        // Check if the user from the token matches the user being updated
-        if (userFromToken.usuario_id !== id) {
-            return res.status(403).json({ message: "Você não tem permissão para editar este usuário" });
+      const token = getToken(request);
+      const user = await getUserByToken(token);
+  
+      const { nome, email, telefone } = request.body;
+  
+      //adicionar imagem ao objeto
+      let imagem = user.imagem
+      if(request.file){
+        imagem = request.file.filename
+      }
+  
+      if (!nome) {
+        response.status(400).json({ message: "O nome é Obrigatório" });
+        return;
+      }
+  
+      if (!email) {
+        response.status(400).json({ message: "O Email é Obrigatório" });
+        return;
+      }
+  
+      if (!telefone) {
+        response.status(400).json({ message: "O Telefone é Obrigatório" });
+        return;
+      }
+  
+      const checkSql = /*sql*/ `SELECT * FROM usuarios WHERE ?? = ?`;
+      const checkData = ["usuario_id", id];
+      conn.query(checkSql, checkData, (err, data) => {
+        if (err) {
+          console.error(err);
+          response.status(500).json({ err: "Erro ao buscar usuário" });
+          return;
         }
-
-        // Check if the new email is already in use
-        if (email) {
-            const [existingUser] = await new Promise((resolve, reject) => {
-                conn.query('SELECT usuario_id FROM usuarios WHERE email = ? AND usuario_id != ?', [email, id], (err, results) => {
-                    if (err) reject(err);
-                    else resolve(results);
-                });
-            });
-
-            if (existingUser) {
-                return res.status(400).json({ message: "Este e-mail já está em uso" });
+  
+        if (data.length === 0) {
+          response.status(404).json({ err: "Usuário não encontrado" });
+          return;
+        }
+  
+        //validação de usuário do banco é o mesmo do token
+  
+        //verifique se o email já está em uso.
+        const checkEmailSql = /*sql*/ `SELECT * FROM usuarios WHERE ?? = ? AND ?? != ?`;
+        const checkEmailData = ["email", email, "usuario_id", id];
+        conn.query(checkEmailSql, checkEmailData, (err, data) => {
+          if (err) {
+            console.error(err);
+            response.status(500).json({ err: "Erro ao buscar email" });
+            return;
+          }
+          
+          if(data.length > 0){
+            response.status(409).json({ err: "E-mail já está em uso" });
+            return;
+          }
+  
+          const updateSql = /*sql*/ `UPDATE usuarios SET ? WHERE ?? = ?`
+          const updateData = [{nome, email, telefone, imagem}, "usuario_id", id]
+          conn.query(updateSql, updateData, (err)=>{
+            if(err){
+              console.error(err);
+              response.status(500).json({ err: "Erro ao atualizar usuário"});
+              return;
             }
-        }
-
-        const updateData = [nome, email, telefone];
-        let updateSql = `
-            UPDATE usuarios
-            SET nome = ?, email = ?, telefone = ?
-        `;
-        
-        if (senha) {
-            const salt = await bcrypt.genSalt(12);
-            const senhaHash = await bcrypt.hash(senha, salt);
-            updateData.push(senhaHash);
-            updateSql += ", senha = ?";
-        }
-        
-        updateSql += " WHERE usuario_id = ?";
-        updateData.push(id);
-
-        conn.query(updateSql, updateData, (err) => {
-            if (err) {
-                console.error("Erro ao atualizar usuário:", err);
-                return res.status(500).json({ msg: "Erro ao atualizar usuário" });
-            }
-
-            res.status(200).json({ msg: "Usuário atualizado com sucesso" });
+  
+            response.status(200).json({message: "Usuário Atualizado"})
+          })
         });
+      });
     } catch (error) {
-        console.error("Erro ao verificar o token:", error);
-        res.status(401).json({ message: "Token inválido" });
+      console.error(error)
+      response.
+      status(error.status || 500).
+      json({
+        message: error.message || "Erro interno no servidor"
+      });
     }
-};
+  };
+  
