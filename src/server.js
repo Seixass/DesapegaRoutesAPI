@@ -1,7 +1,9 @@
 import "dotenv/config";
 import express from "express";
+import path from "node:path";
+import cors from "cors"
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 9090;
 
 //importar conexão 
 import conn from "./config/conn.js"
