@@ -1,5 +1,3 @@
-Aqui está o texto completo para o seu `README.md` com todas as informações detalhadas:
-
 ```markdown
 ## Instalação
 
