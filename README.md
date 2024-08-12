@@ -1,9 +1,9 @@
 ```markdown
-## Instalação
+Instalação
 
 Para configurar o projeto localmente, siga os passos abaixo para instalar as dependências necessárias.
 
-### 1. Instale as Dependências de Produção
+1. Instale as Dependências de Produção
 
 As dependências de produção são necessárias para o funcionamento do projeto. Para instalá-las, execute o comando abaixo:
 
@@ -27,7 +27,7 @@ Isso instalará as seguintes bibliotecas:
 
 As dependências de desenvolvimento são necessárias durante o desenvolvimento do projeto. Para instalá-las, execute o seguinte comando:
 
-```bash
+bash
 npm install --save-dev
 ```
 
@@ -44,4 +44,4 @@ npm run dev
 ```
 
 Esse comando irá iniciar o servidor utilizando o `nodemon`, que monitora alterações nos arquivos e reinicia o servidor automaticamente.
-```
+
