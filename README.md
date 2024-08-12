@@ -45,5 +45,3 @@ npm run dev
 
 Esse comando irá iniciar o servidor utilizando o `nodemon`, que monitora alterações nos arquivos e reinicia o servidor automaticamente.
 ```
-
-Esse texto unifica todas as informações em uma seção, explicando como instalar as dependências de produção e de desenvolvimento, além de como iniciar o projeto.
